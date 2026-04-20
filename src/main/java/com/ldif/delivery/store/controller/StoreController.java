@@ -29,4 +29,10 @@ public class StoreController {
     public StoreResponse getStore(@PathVariable Long storeId){
         return storeService.getStore(storeId);
     }
+
+    @PutMapping("/{storeId}")
+    public void updateStore(@PathVariable Long storeId,
+                            @RequestBody StoreRequest request){
+        storeService.updateStore(storeId, request, "testUser");
+    }
 }

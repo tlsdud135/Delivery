@@ -30,4 +30,16 @@ public class StoreService {
 
         return new StoreResponse(store);
     }
+
+    public void updateStore(Long storeId, StoreRequest request, String username){
+        StoreEntity store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new IllegalArgumentException("가게를 찾을 수 없습니다."));
+
+        store.updateStore(
+                request.getName(),
+                request.getAddress(),
+                request.getPhone(),
+                username
+        );
+    }
 }
