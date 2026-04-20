@@ -41,8 +41,6 @@ public class UserControllerV1 {
         PageResponseDto<ResUserDto> data = new PageResponseDto<>(userPage);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(CommonResponse.success(HttpStatus.OK.value(), "SUCCESS",data ));
-
-        //return ResponseEntity.ok(userService.getUsers(pageable));
+                .body(CommonResponse.success(HttpStatus.OK.value(), "SUCCESS",data));
     }
 }
