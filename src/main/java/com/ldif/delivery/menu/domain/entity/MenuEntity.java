@@ -26,8 +26,11 @@ public class MenuEntity {
     @Column
     private String description;
 
-    @Column
+    @Column(nullable = false)
     private Boolean isHidden = Boolean.FALSE;
+
+    @Column(nullable = false)
+    private Boolean isDeleted = Boolean.FALSE;
 
 //    @ManyToOne
 //    @JoinColumn(name = store_id, nullable = false)
@@ -49,5 +52,9 @@ public class MenuEntity {
 
     public void hide() {
         isHidden = !isHidden;
+    }
+
+    public void delete() {
+        isDeleted = !isDeleted;
     }
 }

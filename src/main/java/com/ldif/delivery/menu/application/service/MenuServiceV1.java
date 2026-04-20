@@ -31,7 +31,7 @@ public class MenuServiceV1 {
     @Transactional
     public void deleteMenu(Long id) {
         MenuEntity menuEntity = findMenuById(id);
-        menuRepository.delete(menuEntity);
+        menuEntity.delete();
     }
 
     @Transactional
@@ -42,7 +42,11 @@ public class MenuServiceV1 {
     }
 
     private MenuEntity findMenuById(Long id) {
-        return menuRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("메뉴 없음." + id));
+        MenuEntity menuEntity = menuRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("메뉴 없음." + id));
+        if(menuEntity.getIsDeleted()){
+            throw new IllegalArgumentException("메뉴 없음." + id);
+        }
+        return menuEntity;
     }
 
 
