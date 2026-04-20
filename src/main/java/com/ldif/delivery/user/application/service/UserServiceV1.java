@@ -19,7 +19,7 @@ public class UserServiceV1 {
 
         List<UserEntity> allUsers = userRepository.findAll();
 
-        List<ResUserDto> userDtoList = allUsers.stream()
+        return allUsers.stream()
                 .map(ResUserDto::new)
                 .collect(Collectors.toList());
 
