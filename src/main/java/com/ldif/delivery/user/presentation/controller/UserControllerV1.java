@@ -21,6 +21,9 @@ public class UserControllerV1 {
 
     private final UserServiceV1 userService;
 
+    //TODO
+    // Pagenation size파라미터 10,30,50만 허용 (그 외 기본 10건)
+
     @GetMapping
     public ResponseEntity<Page<ResUserDto>> getUsers (
             @PageableDefault(
