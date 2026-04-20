@@ -1,5 +1,6 @@
 package com.ldif.delivery.menu.domain.entity;
 
+import com.ldif.delivery.global.infrastructure.entity.BaseEntity;
 import com.ldif.delivery.menu.presentation.dto.MenuRequest;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "p_menu")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MenuEntity {
+public class MenuEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,6 +55,7 @@ public class MenuEntity {
     }
 
     public void delete() {
-        isDeleted = !isDeleted;
+        this.isDeleted = true;
+        super.delete();
     }
 }
