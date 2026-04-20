@@ -1,6 +1,6 @@
-package com.ldif.delivery.menu.entity;
+package com.ldif.delivery.menu.domain.entity;
 
-import com.ldif.delivery.menu.dto.MenuRequest;
+import com.ldif.delivery.menu.presentation.dto.MenuRequest;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "p_menu")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Menu {
+public class MenuEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long menu_id;
+    private Long menuId;
 
     @Column(nullable = false, length = 100)
     private String name;
@@ -27,18 +27,18 @@ public class Menu {
     private String description;
 
     @Column
-    private Boolean is_hidden = Boolean.FALSE;
+    private Boolean isHidden = Boolean.FALSE;
 
 //    @ManyToOne
 //    @JoinColumn(name = store_id, nullable = false)
 //    private Store store;
 
-    public Menu(String name, Integer price, String description, Boolean is_hidden) {
+    public MenuEntity(String name, Integer price, String description, Boolean isHidden) {
         //this.store=store;
         this.name = name;
         this.price = price;
         this.description = description;
-        this.is_hidden = is_hidden;
+        this.isHidden = isHidden;
     }
 
     public void update(@Valid MenuRequest request) {
@@ -48,6 +48,6 @@ public class Menu {
     }
 
     public void hide() {
-        is_hidden = !is_hidden;
+        isHidden = !isHidden;
     }
 }

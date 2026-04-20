@@ -1,8 +1,8 @@
-package com.ldif.delivery.menu.controller;
+package com.ldif.delivery.menu.presentation.controller;
 
-import com.ldif.delivery.menu.dto.MenuRequest;
-import com.ldif.delivery.menu.dto.MenuResponse;
-import com.ldif.delivery.menu.service.MenuService;
+import com.ldif.delivery.menu.presentation.dto.MenuRequest;
+import com.ldif.delivery.menu.presentation.dto.MenuResponse;
+import com.ldif.delivery.menu.application.service.MenuServiceV1;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/menus")
 @RequiredArgsConstructor
-public class MenuController {
+public class MenuControllerV1 {
 
-    private final MenuService menuService;
+    private final MenuServiceV1 menuService;
 
     @GetMapping("/{id}")
     public ResponseEntity<MenuResponse> getMenu(@PathVariable Long id) {

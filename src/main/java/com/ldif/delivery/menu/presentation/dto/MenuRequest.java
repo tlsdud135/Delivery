@@ -1,4 +1,4 @@
-package com.ldif.delivery.menu.dto;
+package com.ldif.delivery.menu.presentation.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
