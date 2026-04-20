@@ -3,6 +3,11 @@ package com.ldif.delivery.user.presentation.controller;
 import com.ldif.delivery.user.application.service.UserServiceV1;
 import com.ldif.delivery.user.presentation.dto.response.ResUserDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,9 +21,15 @@ public class UserControllerV1 {
 
     private final UserServiceV1 userService;
 
-    @GetMapping("/")
-    public List<ResUserDto> getUsers () {
-        return userService.getUsers();
+    @GetMapping
+    public ResponseEntity<Page<ResUserDto>> getUsers (
+            @PageableDefault(
+                    size = 10,
+                    sort = "createdAt",
+                    direction = Sort.Direction.DESC
+            ) Pageable pageable
+    ) {
+        return ResponseEntity.ok(userService.getUsers(pageable));
     }
 
 

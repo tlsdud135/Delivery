@@ -4,6 +4,8 @@ import com.ldif.delivery.user.domain.entity.UserEntity;
 import com.ldif.delivery.user.domain.repository.UserRepository;
 import com.ldif.delivery.user.presentation.dto.response.ResUserDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,13 +17,11 @@ public class UserServiceV1 {
 
     private final UserRepository userRepository;
 
-    public List<ResUserDto> getUsers() {
+    public Page<ResUserDto> getUsers(Pageable pageable) {
 
-        List<UserEntity> allUsers = userRepository.findAll();
+        Page<UserEntity> userPage = userRepository.findAll(pageable);
 
-        return allUsers.stream()
-                .map(ResUserDto::new)
-                .collect(Collectors.toList());
+        return userPage.map(ResUserDto::new);
 
     }
 
