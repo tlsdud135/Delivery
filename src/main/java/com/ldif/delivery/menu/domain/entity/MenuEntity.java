@@ -58,4 +58,8 @@ public class MenuEntity extends BaseEntity {
         this.isDeleted = true;
         super.delete();
     }
+
+    public void setDescription(String description){
+        this.description=description;
+    }
 }

@@ -18,4 +18,8 @@ public class MenuRequest {
     private Integer price;
 
     private String description;
+
+    private Boolean aiDescription;
+
+    private String aiPrompt;
 }

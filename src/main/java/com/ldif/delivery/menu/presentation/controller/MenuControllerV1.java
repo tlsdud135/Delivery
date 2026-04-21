@@ -35,4 +35,10 @@ public class MenuControllerV1 {
     public ResponseEntity<MenuResponse> hideMenu(@PathVariable Long id) {
         return ResponseEntity.ok(menuService.hideMenu(id));
     }
+
+//    @PostMapping
+//    public ResponseEntity<MenuResponse> setMenu(@Valid @RequestBody MenuRequest request){
+//        return ResponseEntity.ok(menuService.newMenu(request));
+//    }
+
 }

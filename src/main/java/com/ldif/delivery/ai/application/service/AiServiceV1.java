@@ -10,9 +10,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 @Service
 @RequiredArgsConstructor
+@Validated
 @Transactional(readOnly = true)
 public class AiServiceV1 {
 
@@ -23,7 +25,7 @@ public class AiServiceV1 {
     public AiResponse setDescription(@Valid AiRequest aiRequest) {
         GeminiResponseDto result = geminiClient.call(aiRequest.getPrompt());
         AiRequestLogEntity aiRequestLogEntity = new AiRequestLogEntity(aiRequest);
-        aiRequestLogEntity.getAiResponse(result);
+        aiRequestLogEntity.setAiResponse(result);
         aiRequestLogRepository.save(aiRequestLogEntity);
         return new AiResponse(aiRequestLogEntity);
     }

@@ -52,7 +52,7 @@ public class AiRequestLogEntity {
         this.requestType = aiRequest.getPrompt();
     }
 
-    public void getAiResponse(GeminiResponseDto geminiResponseDto) {
+    public void setAiResponse(GeminiResponseDto geminiResponseDto) {
         this.requestText = geminiResponseDto.request();
         this.responseText = geminiResponseDto.response();
     }
