@@ -3,10 +3,11 @@ package com.ldif.delivery.menu.application.service;
 import com.ldif.delivery.ai.application.service.AiServiceV1;
 import com.ldif.delivery.ai.presentation.dto.AiRequest;
 import com.ldif.delivery.ai.presentation.dto.AiResponse;
-import com.ldif.delivery.menu.presentation.dto.MenuRequest;
-import com.ldif.delivery.menu.presentation.dto.MenuResponse;
 import com.ldif.delivery.menu.domain.entity.MenuEntity;
 import com.ldif.delivery.menu.domain.repository.MenuRepository;
+import com.ldif.delivery.menu.presentation.dto.MenuRequest;
+import com.ldif.delivery.menu.presentation.dto.MenuResponse;
+import com.ldif.delivery.store.entity.StoreEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -49,22 +50,22 @@ public class MenuServiceV1 {
 
     private MenuEntity findMenuById(Long id) {
         MenuEntity menuEntity = menuRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("메뉴 없음." + id));
-        if(menuEntity.getIsDeleted()){
+        if (menuEntity.getIsDeleted()) {
             throw new IllegalArgumentException("메뉴 없음." + id);
         }
         return menuEntity;
     }
 
-//    @Transactional
-//    public MenuResponse newMenu(@Valid MenuRequest request) {
-//        MenuEntity menuEntity = new MenuEntity(request);
-//        if (Boolean.TRUE.equals(request.getAiDescription())){
-//            AiRequest aiRequest= new AiRequest();
-//            aiRequest.setPrompt(request.getAiPrompt());
-//            AiResponse aiResponse = aiServiceV1.setDescription(aiRequest);
-//            menuEntity.setDescription(aiResponse.getResult());
-//        }
-//        menuRepository.save(menuEntity);
-//        return new MenuResponse(menuEntity);
-//    }
+    @Transactional
+    public MenuResponse setMenu(@Valid MenuRequest request, StoreEntity store) {
+        MenuEntity menuEntity = new MenuEntity(request, store);
+        if (Boolean.TRUE.equals(request.getAiDescription())) {
+            AiRequest aiRequest = new AiRequest();
+            aiRequest.setPrompt(request.getAiPrompt());
+            AiResponse aiResponse = aiServiceV1.setDescription(aiRequest);
+            menuEntity.setDescription(aiResponse.getResult());
+        }
+        menuRepository.save(menuEntity);
+        return new MenuResponse(menuEntity);
+    }
 }

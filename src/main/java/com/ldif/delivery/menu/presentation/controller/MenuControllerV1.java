@@ -1,8 +1,8 @@
 package com.ldif.delivery.menu.presentation.controller;
 
+import com.ldif.delivery.menu.application.service.MenuServiceV1;
 import com.ldif.delivery.menu.presentation.dto.MenuRequest;
 import com.ldif.delivery.menu.presentation.dto.MenuResponse;
-import com.ldif.delivery.menu.application.service.MenuServiceV1;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -35,10 +35,5 @@ public class MenuControllerV1 {
     public ResponseEntity<MenuResponse> hideMenu(@PathVariable Long id) {
         return ResponseEntity.ok(menuService.hideMenu(id));
     }
-
-//    @PostMapping
-//    public ResponseEntity<MenuResponse> setMenu(@Valid @RequestBody MenuRequest request){
-//        return ResponseEntity.ok(menuService.newMenu(request));
-//    }
 
 }

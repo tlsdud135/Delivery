@@ -1,5 +1,8 @@
 package com.ldif.delivery.store.service;
 
+import com.ldif.delivery.menu.application.service.MenuServiceV1;
+import com.ldif.delivery.menu.presentation.dto.MenuRequest;
+import com.ldif.delivery.menu.presentation.dto.MenuResponse;
 import com.ldif.delivery.store.dto.StoreRequest;
 import com.ldif.delivery.store.dto.StoreResponse;
 import com.ldif.delivery.store.entity.StoreEntity;
@@ -14,9 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class StoreService {
 
     private final StoreRepository storeRepository;
+    private final MenuServiceV1 menuServiceV1;
 
     @Transactional
-    public Long createStore(StoreRequest request){
+    public Long createStore(StoreRequest request) {
         StoreEntity store = new StoreEntity(
                 request.getName(),
                 request.getAddress(),
@@ -26,11 +30,11 @@ public class StoreService {
         return storeRepository.save(store).getStoreId();
     }
 
-    public StoreResponse getStore(Long storeId){
+    public StoreResponse getStore(Long storeId) {
         StoreEntity store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new IllegalArgumentException("가게를 찾을 수 없습니다."));
 
-        if(store.isDeleted()){
+        if (store.isDeleted()) {
             throw new IllegalArgumentException("삭제된 가게입니다.");
         }
 
@@ -38,11 +42,11 @@ public class StoreService {
     }
 
     @Transactional
-    public void updateStore(Long storeId, StoreRequest request){
+    public void updateStore(Long storeId, StoreRequest request) {
         StoreEntity store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new IllegalArgumentException("가게를 찾을 수 없습니다."));
 
-        if (store.isDeleted()){
+        if (store.isDeleted()) {
             throw new IllegalArgumentException("삭제된 가게는 수정할 수 없습니다.");
         }
 
@@ -54,12 +58,20 @@ public class StoreService {
     }
 
     @Transactional
-    public void deleteStore(Long storeId){
+    public void deleteStore(Long storeId) {
         StoreEntity store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new IllegalArgumentException("가게를 찾을 수 없습니다."));
 
-        if (store.isDeleted()){
+        if (store.isDeleted()) {
             throw new IllegalArgumentException("이미 삭제된 가게입니다.");
         }
+    }
+
+    @Transactional
+    public MenuResponse newMenu(Long storeId, MenuRequest request) {
+        StoreEntity store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new IllegalArgumentException("가게를 찾을 수 없습니다."));
+
+        return menuServiceV1.setMenu(request, store);
     }
 }
