@@ -24,7 +24,7 @@ public class CommonResponse<T> {
     }
 
     // 에러 응답
-    public static CommonResponse<Void> error(int status, String message, List<FieldErrorDto> errors) {
+    public static <T> CommonResponse<T> error(int status, String message, List<FieldErrorDto> errors) {
         return new CommonResponse<>(status, message, null, errors);
     }
 
