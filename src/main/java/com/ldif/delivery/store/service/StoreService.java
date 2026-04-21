@@ -8,6 +8,10 @@ import com.ldif.delivery.store.dto.StoreResponse;
 import com.ldif.delivery.store.entity.StoreEntity;
 import com.ldif.delivery.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,5 +77,13 @@ public class StoreService {
                 .orElseThrow(() -> new IllegalArgumentException("가게를 찾을 수 없습니다."));
 
         return menuServiceV1.setMenu(request, store);
+    }
+
+    public Page<MenuResponse> getMenus(String keyword, int page, int size, String sort, Long storeId) {
+        Sort.Direction direction = sort.equals("ASC") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort SortBy = Sort.by(direction, "createdAt");
+        Pageable pageable = PageRequest.of(page, size, SortBy);
+
+        return menuServiceV1.getMenus(pageable, keyword, storeId);
     }
 }

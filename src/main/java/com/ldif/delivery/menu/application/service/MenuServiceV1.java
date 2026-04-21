@@ -10,6 +10,8 @@ import com.ldif.delivery.menu.presentation.dto.MenuResponse;
 import com.ldif.delivery.store.entity.StoreEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -67,5 +69,13 @@ public class MenuServiceV1 {
         }
         menuRepository.save(menuEntity);
         return new MenuResponse(menuEntity);
+    }
+
+    public Page<MenuResponse> getMenus(Pageable pageable, String keyword, Long storeId) {
+        Page<MenuEntity> menuList;
+
+        menuList = menuRepository.findAllByStoreEntity_StoreIdAndNameContainingIgnoreCaseAndIsDeletedFalse(storeId, keyword, pageable);
+
+        return menuList.map(MenuResponse::new);
     }
 }
