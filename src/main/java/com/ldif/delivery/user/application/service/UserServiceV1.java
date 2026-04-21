@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,4 +26,12 @@ public class UserServiceV1 {
 
     }
 
+    public ResUserDto getUserInfo(String username) {
+        UserEntity user = userRepository.findByUsername(username).orElseThrow(
+                () -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다. username: " + username)
+        );
+
+        return new ResUserDto(user);
+
+    }
 }
