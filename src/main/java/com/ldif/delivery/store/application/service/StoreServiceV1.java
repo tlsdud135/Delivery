@@ -16,11 +16,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class StoreServiceV1 {
 
     private final StoreRepository storeRepository;
@@ -37,7 +37,7 @@ public class StoreServiceV1 {
 
         return storeRepository.save(store).getStoreId();
     }
-
+    @Transactional(readOnly = true)
     public StoreResponse getStore(UUID storeId){
 
         StoreEntity store = storeRepository.findById(storeId)
@@ -48,6 +48,13 @@ public class StoreServiceV1 {
         }
 
         return new StoreResponse(store);
+    }
+
+    public List<StoreResponse> getStores() {
+        return storeRepository.findAll().stream()
+                .filter(store -> !store.isDeleted())
+                .map(StoreResponse::new)
+                .toList();
     }
 
     @Transactional

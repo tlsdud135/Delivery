@@ -5,6 +5,8 @@ import com.ldif.delivery.store.presentation.dto.StoreResponse;
 import com.ldif.delivery.store.application.service.StoreServiceV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -25,6 +27,11 @@ public class StoreControllerV1 {
 //                          @AuthenticationPrincipal UserDetails user) {
 //      return storeService.createStore(request);
 //    }
+
+    @GetMapping
+    public List<StoreResponse> getStores() {
+        return storeServiceV1.getStores();
+    }
 
     @GetMapping("/{storeId}")
     public StoreResponse getStore(@PathVariable UUID storeId){
