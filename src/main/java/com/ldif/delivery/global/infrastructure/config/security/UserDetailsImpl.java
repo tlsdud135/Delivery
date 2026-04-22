@@ -35,6 +35,20 @@ public class UserDetailsImpl implements UserDetails {
         return authorities;
     }
 
+    public boolean isMasterOrManger() {
+        return getAuthorities().stream()
+                .anyMatch(
+                        a -> a.getAuthority().equals("ROLE_MASTER") || a.getAuthority().equals("ROLE_MANAGER"));
+    }
+
+    public boolean hasPermission(String requestUsername){
+        if(isMasterOrManger()) return true;
+        return this.getUsername().equals(requestUsername);
+    }
+
+
+
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

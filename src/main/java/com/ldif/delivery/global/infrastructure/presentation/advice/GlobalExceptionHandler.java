@@ -30,8 +30,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<CommonResponse<?>> handleAccessDeniedException(AccessDeniedException e) {
+        log.error("AccessDeniedException 발생: {}", e.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(CommonResponse.error(HttpStatus.FORBIDDEN.value(), e.getMessage(), null));
+                .body(CommonResponse.error(HttpStatus.FORBIDDEN.value(), "접근 권한이 없습니다.", null));
     }
 
     /**

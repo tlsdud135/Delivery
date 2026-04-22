@@ -1,8 +1,10 @@
 package com.ldif.delivery.user.presentation.controller;
 
+import com.ldif.delivery.global.infrastructure.config.security.UserDetailsImpl;
 import com.ldif.delivery.global.infrastructure.presentation.dto.CommonResponse;
 import com.ldif.delivery.global.infrastructure.presentation.dto.PageResponseDto;
 import com.ldif.delivery.user.application.service.UserServiceV1;
+import com.ldif.delivery.user.domain.entity.UserRoleEnum;
 import com.ldif.delivery.user.presentation.dto.response.ResUserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,6 +13,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +31,7 @@ public class UserControllerV1 {
     // Pagenation size파라미터 10,30,50만 허용 (그 외 기본 10건)
 
     @GetMapping
+    @Secured({UserRoleEnum.Authority.MASTER, UserRoleEnum.Authority.MANAGER})
     public ResponseEntity<CommonResponse<PageResponseDto<ResUserDto>>> getUsers (
             @PageableDefault(
                     size = 10,
@@ -43,7 +49,14 @@ public class UserControllerV1 {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<CommonResponse<ResUserDto>> getUserInfo (@PathVariable String username){
+    @Secured({UserRoleEnum.Authority.MASTER, UserRoleEnum.Authority.MANAGER, UserRoleEnum.Authority.CUSTOMER})
+    public ResponseEntity<CommonResponse<ResUserDto>> getUserInfo (@PathVariable String username, @AuthenticationPrincipal UserDetailsImpl loginUser){
+
+        if(!loginUser.hasPermission(username)){
+            throw new AccessDeniedException("접근 권한이 없습니다.");
+        }
+
+
         ResUserDto user = userService.getUserInfo(username);
 
         return ResponseEntity.status(HttpStatus.OK)
