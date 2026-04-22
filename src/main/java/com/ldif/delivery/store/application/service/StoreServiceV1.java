@@ -1,9 +1,9 @@
-package com.ldif.delivery.store.service;
+package com.ldif.delivery.store.application.service;
 
-import com.ldif.delivery.store.dto.StoreRequest;
-import com.ldif.delivery.store.dto.StoreResponse;
-import com.ldif.delivery.store.entity.StoreEntity;
-import com.ldif.delivery.store.repository.StoreRepository;
+import com.ldif.delivery.store.presentation.dto.StoreRequest;
+import com.ldif.delivery.store.presentation.dto.StoreResponse;
+import com.ldif.delivery.store.domain.entity.StoreEntity;
+import com.ldif.delivery.store.domain.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +13,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class StoreService {
+public class StoreServiceV1 {
 
     private final StoreRepository storeRepository;
 

@@ -1,4 +1,4 @@
-package com.ldif.delivery.store.entity;
+package com.ldif.delivery.store.domain.entity;
 
 import com.ldif.delivery.global.infrastructure.entity.BaseEntity;
 import jakarta.persistence.*;

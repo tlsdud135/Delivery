@@ -1,6 +1,6 @@
-package com.ldif.delivery.store.dto;
+package com.ldif.delivery.store.presentation.dto;
 
-import com.ldif.delivery.store.entity.StoreEntity;
+import com.ldif.delivery.store.domain.entity.StoreEntity;
 import lombok.Getter;
 import java.math.BigDecimal;
 import java.util.UUID;
