@@ -31,10 +31,9 @@ public class UserServiceV1 {
 
     public Page<ResUserDto> getUsers(Pageable pageable) {
 
-        Page<UserEntity> userPage = userRepository.findAll(pageable);
+        Page<UserEntity> userPage = userRepository.findAllByDeletedAtIsNull(pageable);
 
         return userPage.map(ResUserDto::new);
-
     }
 
     public ResUserDto getUserInfo(String username) {
@@ -42,8 +41,9 @@ public class UserServiceV1 {
                 () -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다. username: " + username)
         );
 
-        //TODO
-        // 삭제된 유저
+        if (user.getDeletedAt() != null) {
+            throw new IllegalArgumentException("이미 탈퇴 처리된 사용자입니다. 탈퇴 일시: " + user.getDeletedAt());
+        }
 
         return new ResUserDto(user);
 
