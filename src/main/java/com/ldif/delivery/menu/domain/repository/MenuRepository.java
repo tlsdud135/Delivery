@@ -5,6 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MenuRepository extends JpaRepository<MenuEntity, Long> {
+import java.util.Optional;
+import java.util.UUID;
+
+public interface MenuRepository extends JpaRepository<MenuEntity, UUID> {
     Page<MenuEntity> findAllByStoreEntity_StoreIdAndNameContainingIgnoreCaseAndIsDeletedFalse(Long storeId, String keyword, Pageable pageable);
 }

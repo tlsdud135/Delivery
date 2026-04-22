@@ -9,6 +9,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @Table(name = "p_menu")
@@ -16,8 +18,8 @@ import lombok.NoArgsConstructor;
 public class MenuEntity extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long menuId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID menuId;
 
     @Column(nullable = false, length = 100)
     private String name;
@@ -57,7 +59,7 @@ public class MenuEntity extends BaseEntity {
 
     public void delete() {
         this.isDeleted = true;
-        super.delete();
+        super.softDelete("임시 이름");
     }
 
     public void setDescription(String description) {

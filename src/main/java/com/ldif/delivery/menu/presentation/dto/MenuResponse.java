@@ -3,9 +3,11 @@ package com.ldif.delivery.menu.presentation.dto;
 import com.ldif.delivery.menu.domain.entity.MenuEntity;
 import lombok.Getter;
 
+import java.util.UUID;
+
 @Getter
 public class MenuResponse {
-    private final Long menuId;
+    private final UUID menuId;
     private final String name;
     private final Integer price;
     private final String description;
