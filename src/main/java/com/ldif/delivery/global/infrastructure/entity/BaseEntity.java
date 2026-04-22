@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @MappedSuperclass
+//@EntityListeners(AutoCloseable.class)
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
 
@@ -38,4 +39,10 @@ public class BaseEntity {
 
     @Column
     private String deletedBy;
+
+
+    public void delete() {
+        this.deletedAt = LocalDateTime.now();
+        //this.deletedBy = deletedBy;
+    }
 }
