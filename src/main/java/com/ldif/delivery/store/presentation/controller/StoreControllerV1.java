@@ -1,9 +1,14 @@
 package com.ldif.delivery.store.presentation.controller;
 
+import com.ldif.delivery.menu.presentation.dto.MenuRequest;
+import com.ldif.delivery.menu.presentation.dto.MenuResponse;
 import com.ldif.delivery.store.presentation.dto.StoreRequest;
 import com.ldif.delivery.store.presentation.dto.StoreResponse;
 import com.ldif.delivery.store.application.service.StoreServiceV1;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
@@ -40,5 +45,21 @@ public class StoreControllerV1 {
     @DeleteMapping("/{storeId}")
     public void deleteStore(@PathVariable UUID storeId) {
         storeServiceV1.deleteStore(storeId);
+    }
+
+    @PostMapping("/{storeId}/menus")
+    public ResponseEntity<MenuResponse> setMenu(@PathVariable UUID storeId, @Valid @RequestBody MenuRequest request) {
+        return ResponseEntity.ok(storeServiceV1.newMenu(storeId, request));
+    }
+
+    @GetMapping("/{storeId}/menus")
+    public Page<MenuResponse> getMenus(
+            @RequestParam("keyword") String keyword,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam("sort") String sort,
+            @PathVariable UUID storeId
+    ) {
+        return storeServiceV1.getMenus(keyword, page, size, sort, storeId);
     }
 }
