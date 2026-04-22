@@ -2,6 +2,7 @@ package com.ldif.delivery.user.application.service;
 
 import com.ldif.delivery.global.infrastructure.config.security.UserDetailsImpl;
 import com.ldif.delivery.user.domain.entity.UserEntity;
+import com.ldif.delivery.user.domain.entity.UserRoleEnum;
 import com.ldif.delivery.user.domain.repository.UserRepository;
 import com.ldif.delivery.user.presentation.dto.request.ReqUserDto;
 import com.ldif.delivery.user.presentation.dto.request.ReqUserRoleDto;
@@ -10,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,9 +31,18 @@ public class UserServiceV1 {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public Page<ResUserDto> getUsers(Pageable pageable) {
+    public Page<ResUserDto> getUsers(String keyword, UserRoleEnum role, Pageable pageable) {
 
-        Page<UserEntity> userPage = userRepository.findAllByDeletedAtIsNull(pageable);
+        // 1. 허용된 사이즈 리스트 (10, 30, 50)
+        List<Integer> allowedSizes = List.of(10, 30, 50);
+        int pageSize = pageable.getPageSize();
+
+        // 2. 허용되지 않은 사이즈면 기본값 10으로 세팅한 새로운 PageRequest 생성
+        if (!allowedSizes.contains(pageSize)) {
+            pageable = PageRequest.of(pageable.getPageNumber(), 10, pageable.getSort());
+        }
+
+        Page<UserEntity> userPage = userRepository.searchUsers(keyword, role, pageable);
 
         return userPage.map(ResUserDto::new);
     }
@@ -53,6 +64,10 @@ public class UserServiceV1 {
     public ResUserDto updateUserInfo(String username, ReqUserDto requestDto, UserDetailsImpl loginUser) {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        if (user.getDeletedAt() != null) {
+            throw new IllegalArgumentException("이미 탈퇴 처리된 사용자입니다. 탈퇴 일시: " + user.getDeletedAt());
+        }
 
         // 1. 공통 수정 필드
         if (requestDto.getNickname() != null) user.setNickname(requestDto.getNickname());

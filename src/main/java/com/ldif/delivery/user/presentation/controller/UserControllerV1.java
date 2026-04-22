@@ -38,6 +38,8 @@ public class UserControllerV1 {
     @GetMapping
     @Secured({UserRoleEnum.Authority.MASTER, UserRoleEnum.Authority.MANAGER})
     public ResponseEntity<CommonResponse<PageResponseDto<ResUserDto>>> getUsers (
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) UserRoleEnum role,
             @PageableDefault(
                     size = 10,
                     sort = "createdAt",
@@ -45,7 +47,7 @@ public class UserControllerV1 {
             ) Pageable pageable
     ) {
 
-        Page<ResUserDto> userPage = userService.getUsers(pageable);
+        Page<ResUserDto> userPage = userService.getUsers(keyword, role, pageable);
 
         PageResponseDto<ResUserDto> data = new PageResponseDto<>(userPage);
 
