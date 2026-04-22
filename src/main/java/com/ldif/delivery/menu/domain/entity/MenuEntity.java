@@ -41,6 +41,10 @@ public class MenuEntity extends BaseEntity {
     @JoinColumn(name = "store_id", nullable = false)
     private StoreEntity storeEntity;
 
+    public UUID getStoreId() {
+        return storeEntity != null ? storeEntity.getStoreId() : null;
+    }
+
     public MenuEntity(MenuRequest request, StoreEntity storeEntity) {
         this.storeEntity = storeEntity;
         this.name = request.getName();
