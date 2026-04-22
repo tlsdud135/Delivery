@@ -72,4 +72,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String jsonResponse = new ObjectMapper().writeValueAsString(commonResponse);
         response.getWriter().write(jsonResponse);
     }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        log.info("로그인 실패");
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+    }
 }
