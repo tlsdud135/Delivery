@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @MappedSuperclass
-//@EntityListeners(AutoCloseable.class)
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
 
@@ -46,8 +45,16 @@ public class BaseEntity {
     @Column
     private String deletedBy;
 
-    public void delete() {
+
+    // 7. 소프트 삭제
+    public void softDelete(String username) {
         this.deletedAt = LocalDateTime.now();
-        //this.deletedBy = deletedBy;
+        this.deletedBy = username;
     }
+
+
+//     public void delete() {
+//         this.deletedAt = LocalDateTime.now();
+//         //this.deletedBy = deletedBy;
+//     }
 }
