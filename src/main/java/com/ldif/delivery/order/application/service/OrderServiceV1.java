@@ -8,8 +8,8 @@ import com.ldif.delivery.order.domain.entity.OrderStatus;
 import com.ldif.delivery.order.domain.entity.OrderType;
 import com.ldif.delivery.order.domain.repository.OrderRepository;
 import com.ldif.delivery.order.presentation.dto.*;
-import com.ldif.delivery.store.entity.StoreEntity;
-import com.ldif.delivery.store.repository.StoreRepository;
+import com.ldif.delivery.store.domain.entity.StoreEntity;
+import com.ldif.delivery.store.domain.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -63,12 +63,12 @@ public class OrderServiceV1 {
         });
 
         // 4. 메뉴가 해당 가게 소속인지 검증
-        menus.forEach(menu -> {
-            if (!menu.getStoreId().equals(req.storeId())) {
-                throw new IllegalArgumentException(
-                        "해당 가게의 메뉴가 아닙니다. menuId=" + menu.getMenuId());
-            }
-        });
+//        menus.forEach(menu -> {
+//            if (!menu.getStoreId().equals(req.storeId())) {
+//                throw new IllegalArgumentException(
+//                        "해당 가게의 메뉴가 아닙니다. menuId=" + menu.getMenuId());
+//            }
+//        });
 
         // 5. 메뉴 주문 가능 상태 검증 (삭제, 숨김)
         menus.forEach(menu -> {

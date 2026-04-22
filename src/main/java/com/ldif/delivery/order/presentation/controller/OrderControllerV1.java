@@ -38,9 +38,7 @@ public class OrderControllerV1 {
             @AuthenticationPrincipal UserDetails userDetails
     ){
 
-        // 테스트를 위해 null 체크 추가
-        String customerId = (userDetails != null) ? userDetails.getUsername() : "test_customer";
-//        String customerId = userDetails.getUsername();
+        String customerId = userDetails.getUsername();
         OrderResponse response = orderService.createOrder(req, customerId);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
