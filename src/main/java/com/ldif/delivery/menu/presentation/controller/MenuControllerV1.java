@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/menus")
+@RequestMapping("/api/v1/menus")
 @RequiredArgsConstructor
 public class MenuControllerV1 {
 
