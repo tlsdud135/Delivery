@@ -21,9 +21,9 @@ public class AddressController {
     private final AddressService addressService;
 
     // 주소 등록
-    @PostMapping
+    /*@PostMapping
     public ResponseEntity<AddressResponseDto> createAddress(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            //@AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestBody @Valid AddressRequestDto dto) {
 
         AddressResponseDto response = addressService.createAddress(userDetails.getUserId(), dto);
@@ -73,5 +73,5 @@ public class AddressController {
 
         AddressResponseDto response = addressService.setDefaultAddress(userDetails.getUserId(), addressId);
         return ResponseEntity.ok(response);
-    }
+    }*/
 }

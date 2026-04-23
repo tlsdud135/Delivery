@@ -18,9 +18,9 @@ public class Address extends BaseTimeEntity {
     @Column(name = "address_id", columnDefinition = "BINARY(16)")
     private UUID addressId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    /*@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private User user;*/
 
     @Column(name = "alias", length = 20)
     private String alias;
@@ -43,7 +43,7 @@ public class Address extends BaseTimeEntity {
     @Column(name = "is_default")
     private boolean isDefault = false;
 
-    @Builder
+    /*@Builder
     public Address(User user, String alias, String recipientName,
                    String phone, String address, String detailAddress,
                    String zipCode, boolean isDefault){
@@ -55,7 +55,7 @@ public class Address extends BaseTimeEntity {
         this.detailAddress = detailAddress;
         this.zipCode = zipCode;
         this.isDefault = isDefault;
-    }
+    }*/
     // 기본 주소 설정
     public void changeDefault(boolean isDefault) {
         this.isDefault = isDefault;
