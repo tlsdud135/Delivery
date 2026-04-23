@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.catalina.User;
 
 import javax.validation.constraints.Max;
@@ -16,6 +17,7 @@ import java.util.UUID;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "p_review")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReviewEntity extends BaseEntity {

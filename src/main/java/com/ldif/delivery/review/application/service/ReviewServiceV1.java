@@ -1,7 +1,9 @@
 package com.ldif.delivery.review.application.service;
 
+import com.ldif.delivery.global.infrastructure.config.security.UserDetailsImpl;
 import com.ldif.delivery.review.domain.entity.ReviewEntity;
 import com.ldif.delivery.review.domain.respository.ReviewRepository;
+import com.ldif.delivery.review.presentation.dto.ReqReviewDto;
 import com.ldif.delivery.review.presentation.dto.ResReviewDetailDto;
 import com.ldif.delivery.review.presentation.dto.ResReviewDto;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,12 +46,33 @@ public class ReviewServiceV1 {
     }
 
     public ResReviewDetailDto getReviewDetail(UUID reviewId) {
-        ReviewEntity review = reviewRepository.findByReviewId(reviewId)
+        ReviewEntity review = reviewRepository.findByReviewIdAndDeletedAtIsNull(reviewId)
                         .orElseThrow(() -> new IllegalArgumentException("리뷰 없음." + reviewId));
 
         return new ResReviewDetailDto(review);
     }
 
+    @Transactional
+    public ResReviewDetailDto updateReview(UUID reviewId, ReqReviewDto reqReviewDto, UserDetailsImpl loginUser) {
+        ReviewEntity review = reviewRepository.findByReviewIdAndDeletedAtIsNull(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("리뷰 없음." + reviewId));
+
+        String username = review.getUser().getUsername();
+
+        // 본인만.
+        if(!loginUser.hasPermission(username)){
+            throw new AccessDeniedException("접근 권한이 없습니다.");
+        }
+
+
+        if (reqReviewDto.getRating() != null) review.setRating(reqReviewDto.getRating());
+        if (reqReviewDto.getContent() != null) review.setContent(reqReviewDto.getContent());
+
+        
+
+
+        return new ResReviewDetailDto(review);
+    }
 
     /**
      * 리뷰 내용을 10자로 요약하는 공통 함수

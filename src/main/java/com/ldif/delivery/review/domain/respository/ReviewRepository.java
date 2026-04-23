@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public interface ReviewRepository extends JpaRepository<ReviewEntity, UUID> {
 
-    Optional<ReviewEntity> findByReviewId(UUID reviewId);
+    Optional<ReviewEntity> findByReviewIdAndDeletedAtIsNull(UUID reviewId);
 
     @Query("SELECT r FROM ReviewEntity r " +
             "WHERE r.deletedAt IS NULL " +

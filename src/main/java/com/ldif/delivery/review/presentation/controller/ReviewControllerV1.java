@@ -1,10 +1,14 @@
 package com.ldif.delivery.review.presentation.controller;
 
+import com.ldif.delivery.global.infrastructure.config.security.UserDetailsImpl;
 import com.ldif.delivery.global.infrastructure.presentation.dto.CommonResponse;
 import com.ldif.delivery.global.infrastructure.presentation.dto.PageResponseDto;
 import com.ldif.delivery.review.application.service.ReviewServiceV1;
+import com.ldif.delivery.review.presentation.dto.ReqReviewDto;
 import com.ldif.delivery.review.presentation.dto.ResReviewDetailDto;
 import com.ldif.delivery.review.presentation.dto.ResReviewDto;
+import com.ldif.delivery.user.domain.entity.UserRoleEnum;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +16,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -50,5 +57,20 @@ public class ReviewControllerV1 {
                 .body(CommonResponse.success(HttpStatus.OK.value(), "SUCCESS", reviewDetail));
 
     }
+
+    @PutMapping("/reviews/{reviewId}")
+    @Secured(UserRoleEnum.Authority.CUSTOMER)
+    public ResponseEntity<CommonResponse<ResReviewDetailDto>> updateReview(
+            @PathVariable UUID reviewId,
+            @Valid @RequestBody ReqReviewDto reqReviewDto,
+            @AuthenticationPrincipal UserDetailsImpl loginUser){
+
+        ResReviewDetailDto updateReview = reviewService.updateReview(reviewId, reqReviewDto, loginUser);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(CommonResponse.success(HttpStatus.OK.value(), "SUCCESS", updateReview));
+
+    }
+
+
 
 }
