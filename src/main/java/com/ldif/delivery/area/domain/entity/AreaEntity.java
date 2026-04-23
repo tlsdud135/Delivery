@@ -16,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class AreaEntity extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID areaId;
 
     @Column(nullable = false, length = 100, unique = true)
