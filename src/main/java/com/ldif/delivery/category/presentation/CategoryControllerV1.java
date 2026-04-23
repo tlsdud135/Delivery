@@ -4,11 +4,13 @@ import com.ldif.delivery.category.application.service.CategoryServiceV1;
 import com.ldif.delivery.category.presentation.dto.CategoryRequest;
 import com.ldif.delivery.category.presentation.dto.CategoryResponse;
 import com.ldif.delivery.global.infrastructure.presentation.dto.CommonResponse;
+import com.ldif.delivery.user.domain.entity.UserRoleEnum;
 import jakarta.servlet.ServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -23,6 +25,7 @@ public class CategoryControllerV1 {
     private final CategoryServiceV1 categoryServiceV1;
 
     @PostMapping
+    @Secured({UserRoleEnum.Authority.MASTER, UserRoleEnum.Authority.MANAGER})
     public ResponseEntity<CommonResponse<CategoryResponse>> createCategory(@Valid @RequestBody CategoryRequest request)
     {
         CategoryResponse createCategoryResponse = categoryServiceV1.createCategory(request);
@@ -61,6 +64,7 @@ public class CategoryControllerV1 {
     }
 
     @PutMapping("/{id}")
+    @Secured({UserRoleEnum.Authority.MASTER, UserRoleEnum.Authority.MANAGER})
     public ResponseEntity<CommonResponse<CategoryResponse>> updateProduct(@PathVariable UUID id, @Valid @RequestBody CategoryRequest request)
     {
         CategoryResponse updatedCategory = categoryServiceV1.updateCategory(id, request);
@@ -75,6 +79,7 @@ public class CategoryControllerV1 {
     }
 
     @DeleteMapping("/{id}")
+    @Secured({UserRoleEnum.Authority.MASTER, UserRoleEnum.Authority.MANAGER})
     public ResponseEntity<CommonResponse<Void>> deleteProduct(@PathVariable UUID id){
         categoryServiceV1.deleteCategory(id);
 
