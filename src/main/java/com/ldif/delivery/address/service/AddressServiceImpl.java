@@ -20,10 +20,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AddressServiceImpl implements AddressService {
-    private static final int MAX_ADDRESS_COUNT = 10;
 
+    private static final int MAX_ADDRESS_COUNT = 10;
     private final AddressRepository addressRepository;
-    private final UserRepository userRepository;
+    //private final UserRepository userRepository;
 
     @Override
     @Transactional
