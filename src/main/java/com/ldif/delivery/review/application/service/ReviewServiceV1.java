@@ -2,6 +2,7 @@ package com.ldif.delivery.review.application.service;
 
 import com.ldif.delivery.review.domain.entity.ReviewEntity;
 import com.ldif.delivery.review.domain.respository.ReviewRepository;
+import com.ldif.delivery.review.presentation.dto.ResReviewDetailDto;
 import com.ldif.delivery.review.presentation.dto.ResReviewDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +42,12 @@ public class ReviewServiceV1 {
         });
     }
 
+    public ResReviewDetailDto getReviewDetail(UUID reviewId) {
+        ReviewEntity review = reviewRepository.findByReviewId(reviewId)
+                        .orElseThrow(() -> new IllegalArgumentException("리뷰 없음." + reviewId));
 
+        return new ResReviewDetailDto(review);
+    }
 
 
     /**
@@ -59,4 +65,6 @@ public class ReviewServiceV1 {
                 ? cleanContent.substring(0, 10) + "..."
                 : cleanContent;
     }
+
+
 }
