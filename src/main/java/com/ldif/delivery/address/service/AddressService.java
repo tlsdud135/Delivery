@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.UUID;
 
 public interface AddressService {
-    AddressResponseDto createAddress(UUID userId, AddressRequestDto dto);
-    List<AddressResponseDto> getAddresses(UUID userId);
-    AddressResponseDto getAddress(UUID userId, UUID addressId);
-    AddressResponseDto updateAddress(UUID userId, UUID addressId, AddressRequestDto dto);
-    void deleteAddress(UUID userId, UUID addressId);
-    AddressResponseDto setDefaultAddress(UUID userId, UUID addressId);
+    AddressResponseDto createAddress(String username, AddressRequestDto dto);
+    List<AddressResponseDto> getAddresses(String username);
+    AddressResponseDto getAddress(String username, UUID addressId);
+    AddressResponseDto updateAddress(String username, UUID addressId, AddressRequestDto dto);
+    void deleteAddress(String username, UUID addressId);
+    AddressResponseDto setDefaultAddress(String username, UUID addressId);
 }

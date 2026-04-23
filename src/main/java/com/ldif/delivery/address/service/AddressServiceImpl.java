@@ -28,9 +28,9 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     @Transactional
-    public AddressResponseDto createAddress(UUID userId, AddressRequestDto dto) {
+    public AddressResponseDto createAddress(String username, AddressRequestDto dto) {
 
-        UserEntity user = findUser(userId);
+        UserEntity user = findUser(username);
 
         // 주소 최대 개수 체크
         List<Address> existing = addressRepository.findAllByUserOrderByIsDefaultDescCreatedAtDesc(user);
@@ -59,8 +59,8 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public List<AddressResponseDto> getAddresses(UUID userId) {
-        UserEntity user = findUser(userId);
+    public List<AddressResponseDto> getAddresses(String username) {
+        UserEntity user = findUser(username);
         return addressRepository.findAllByUserOrderByIsDefaultDescCreatedAtDesc(user)
                 .stream()
                 .map(AddressResponseDto::from)
@@ -68,16 +68,16 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public AddressResponseDto getAddress(UUID userId, UUID addressId) {
-        UserEntity user = findUser(userId);
+    public AddressResponseDto getAddress(String username, UUID addressId) {
+        UserEntity user = findUser(username);
         Address address = findAddress(addressId, user);
         return AddressResponseDto.from(address);
     }
 
     @Override
     @Transactional
-    public AddressResponseDto updateAddress(UUID userId, UUID addressId, AddressRequestDto dto) {
-        UserEntity user = findUser(userId);
+    public AddressResponseDto updateAddress(String username, UUID addressId, AddressRequestDto dto) {
+        UserEntity user = findUser(username);
         Address address = findAddress(addressId, user);
 
         address.update(
@@ -93,8 +93,8 @@ public class AddressServiceImpl implements AddressService {
     }
     @Override
     @Transactional
-    public void deleteAddress(UUID userId, UUID addressId) {
-        UserEntity user = findUser(userId);
+    public void deleteAddress(String username, UUID addressId) {
+        UserEntity user = findUser(username);
         Address address = findAddress(addressId, user);
 
         // 기본 주소 삭제 시 다음 최신 주소를 기본으로 승격
@@ -110,8 +110,8 @@ public class AddressServiceImpl implements AddressService {
     }
     @Override
     @Transactional
-    public AddressResponseDto setDefaultAddress(UUID userId, UUID addressId) {
-        UserEntity user = findUser(userId);
+    public AddressResponseDto setDefaultAddress(String username, UUID addressId) {
+        UserEntity user = findUser(username);
 
         // 기존 기본 주소 해제
         addressRepository.findByUserAndIsDefaultTrue(user)
@@ -126,13 +126,14 @@ public class AddressServiceImpl implements AddressService {
 
     // ── private 헬퍼 ──────────────────────────────
 
-    private UserEntity findUser(UUID userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-    }
 
     private Address findAddress(UUID addressId, UserEntity user) {
         return addressRepository.findByAddressIdAndUser(addressId, user)
                 .orElseThrow(() -> new CustomException(ErrorCode.ADDRESS_NOT_FOUND));
+    }
+    // username으로 찾는 헬퍼 추가
+    private UserEntity findUser(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 }

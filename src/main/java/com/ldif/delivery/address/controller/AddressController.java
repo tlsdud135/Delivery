@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import com.ldif.delivery.global.infrastructure.config.security.UserDetailsImpl;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,7 +27,7 @@ public class AddressController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestBody @Valid AddressRequestDto dto) {
 
-        AddressResponseDto response = addressService.createAddress(userDetails.getUserId(), dto);
+        AddressResponseDto response = addressService.createAddress(userDetails.getUsername(), dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     // 내 주소 전체 조회
@@ -34,7 +35,7 @@ public class AddressController {
     public ResponseEntity<List<AddressResponseDto>> getAddresses(
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        List<AddressResponseDto> response = addressService.getAddresses(userDetails.getUserId());
+        List<AddressResponseDto> response = addressService.getAddresses(userDetails.getUsername());
         return ResponseEntity.ok(response);
     }
     // 주소 단건 조회
@@ -43,7 +44,7 @@ public class AddressController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable UUID addressId) {
 
-        AddressResponseDto response = addressService.getAddress(userDetails.getUserId(), addressId);
+        AddressResponseDto response = addressService.getAddress(userDetails.getUsername(), addressId);
         return ResponseEntity.ok(response);
     }
     // 주소 수정
@@ -53,7 +54,7 @@ public class AddressController {
             @PathVariable UUID addressId,
             @RequestBody @Valid AddressRequestDto dto) {
 
-        AddressResponseDto response = addressService.updateAddress(userDetails.getUserId(), addressId, dto);
+        AddressResponseDto response = addressService.updateAddress(userDetails.getUsername(), addressId, dto);
         return ResponseEntity.ok(response);
     }
     // 주소 삭제
@@ -62,7 +63,7 @@ public class AddressController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable UUID addressId) {
 
-        addressService.deleteAddress(userDetails.getUserId(), addressId);
+        addressService.deleteAddress(userDetails.getUsername(), addressId);
         return ResponseEntity.noContent().build();
     }
     // 기본 주소 설정
@@ -71,7 +72,7 @@ public class AddressController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable UUID addressId) {
 
-        AddressResponseDto response = addressService.setDefaultAddress(userDetails.getUserId(), addressId);
+        AddressResponseDto response = addressService.setDefaultAddress(userDetails.getUsername(), addressId);
         return ResponseEntity.ok(response);
     }
 }

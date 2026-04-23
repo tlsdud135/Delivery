@@ -35,7 +35,7 @@ public class Address extends BaseTimeEntity {
     @Column(name = "address", length = 255, nullable = false)
     private String address;
 
-    @Column(name = "address", length =255, nullable = false)
+    @Column(name = "detail_address", length =255, nullable = false)
     private String detailAddress;
 
     @Column(name = "zip_code", length = 10)
