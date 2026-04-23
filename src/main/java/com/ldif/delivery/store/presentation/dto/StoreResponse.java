@@ -2,7 +2,6 @@ package com.ldif.delivery.store.presentation.dto;
 
 import com.ldif.delivery.store.domain.entity.StoreEntity;
 import lombok.Getter;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
