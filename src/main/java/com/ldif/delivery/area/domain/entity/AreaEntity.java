@@ -46,7 +46,7 @@ public class AreaEntity extends BaseEntity {
         this.district = areaRequest.getDistrict();
     }
 
-    public void active() {
+    public void toggleActive() {
         isActive = !isActive;
     }
 
