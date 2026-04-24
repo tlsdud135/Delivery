@@ -16,6 +16,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -119,8 +121,11 @@ public class StoreServiceV1 {
                 ? Sort.Direction.ASC
                 : Sort.Direction.DESC;
 
+        List<Integer> allowedSize = Arrays.asList(10, 30, 50);
+        int setSize = allowedSize.contains(size) ? size : 10;
+
         Sort sortBy = Sort.by(direction, "createdAt");
-        Pageable pageable = PageRequest.of(page, size, sortBy);
+        Pageable pageable = PageRequest.of(page, setSize, sortBy);
 
         return menuServiceV1.getMenus(pageable, keyword, storeId);
     }
