@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import com.ldif.delivery.global.infrastructure.entity.BaseEntity;
 
 import java.util.UUID;
 
@@ -13,7 +14,7 @@ import java.util.UUID;
 @Table(name = "address")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Address extends BaseTimeEntity {
+public class Address extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "address_id", columnDefinition = "BINARY(16)")
@@ -26,11 +27,11 @@ public class Address extends BaseTimeEntity {
     @Column(name = "alias", length = 20)
     private String alias;
 
-    @Column(name = "recipient_name", length =50)
+    /*@Column(name = "recipient_name", length =50)
     private String recipientName;
 
     @Column(name = "phone", length= 20)
-    private String phone;
+    private String phone;*/
 
     @Column(name = "address", length = 255, nullable = false)
     private String address;
@@ -50,8 +51,8 @@ public class Address extends BaseTimeEntity {
                    String zipCode, boolean isDefault){
         this.user = user;
         this.alias = alias;
-        this.recipientName = recipientName;
-        this.phone = phone;
+        /*this.recipientName = recipientName;
+        this.phone = phone;*/
         this.address = address;
         this.detailAddress = detailAddress;
         this.zipCode = zipCode;
@@ -65,8 +66,8 @@ public class Address extends BaseTimeEntity {
     public void update(String alias, String recipientName, String phone,
                        String address, String detailAddress, String zipCode) {
         this.alias = alias;
-        this.recipientName = recipientName;
-        this.phone = phone;
+        /*this.recipientName = recipientName;
+        this.phone = phone;*/
         this.address = address;
         this.detailAddress = detailAddress;
         this.zipCode = zipCode;

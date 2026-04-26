@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import com.ldif.delivery.global.infrastructure.config.security.UserDetailsImpl;
+import com.ldif.delivery.global.infrastructure.presentation.dto.CommonResponse;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,12 +24,12 @@ public class AddressController {
 
     // 주소 등록
     @PostMapping
-    public ResponseEntity<AddressResponseDto> createAddress(
+    public ResponseEntity<CommonResponse<AddressResponseDto>> createAddress(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestBody @Valid AddressRequestDto dto) {
 
         AddressResponseDto response = addressService.createAddress(userDetails.getUsername(), dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(CommonResponse.success(HttpStatus.CREATED.value(), "SUCCESS", response));
     }
     // 내 주소 전체 조회
     @GetMapping
