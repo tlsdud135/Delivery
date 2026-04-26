@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -67,8 +68,9 @@ public class PaymentServiceV1 {
             throw new IllegalStateException("이미 취소된 결제입니다.");
         }
 
-        if ("COMPLETED".equals(payment.getStatus())) {
-            throw new IllegalStateException("완료된 결제는 취소할 수 없습니다.");
+        if ("COMPLETED".equals(payment.getStatus())
+                && payment.getCreatedAt().plusMinutes(5).isBefore(LocalDateTime.now())) {
+            throw new IllegalStateException("결제 후 5분이 지나 취소할 수 없습니다.");
         }
 
         payment.cancel();
