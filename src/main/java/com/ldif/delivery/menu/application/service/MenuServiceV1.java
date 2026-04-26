@@ -12,7 +12,6 @@ import com.ldif.delivery.store.domain.entity.StoreEntity;
 import com.ldif.delivery.user.domain.entity.UserEntity;
 import com.ldif.delivery.user.domain.entity.UserRoleEnum;
 import com.ldif.delivery.user.domain.repository.UserRepository;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -84,7 +83,7 @@ public class MenuServiceV1 {
 
     //메뉴 등록(AI 설명 생성 옵션)
     @Transactional
-    public MenuResponse setMenu(@Valid MenuRequest request, StoreEntity store, UserDetailsImpl loginUser) {
+    public MenuResponse setMenu(MenuRequest request, StoreEntity store, UserDetailsImpl loginUser) {
         MenuEntity menuEntity = new MenuEntity(request, store);
 
         if (!loginUser.hasPermission(menuEntity.getStoreEntity().getOwner().getUsername())) {

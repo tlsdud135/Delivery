@@ -4,7 +4,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.7'
 }
 ext {
-	springAiVersion = "1.1.4"
+    springAiVersion = "1.1.4"
 }
 
 group = 'com.ldif'
@@ -50,19 +50,20 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testAnnotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.jeasy:easy-random-core:5.0.0'
 
     //api
     implementation 'org.springframework.ai:spring-ai-starter-model-google-genai'
 
     //mysql, h2
     runtimeOnly 'com.h2database:h2'
-	  implementation 'com.mysql:mysql-connector-j'
+    implementation 'com.mysql:mysql-connector-j'
 
 }
 dependencyManagement {
-	imports {
-		mavenBom "org.springframework.ai:spring-ai-bom:$springAiVersion"
-	}
+    imports {
+        mavenBom "org.springframework.ai:spring-ai-bom:$springAiVersion"
+    }
 }
 
 // QueryDSL Q-class 생성 경로
