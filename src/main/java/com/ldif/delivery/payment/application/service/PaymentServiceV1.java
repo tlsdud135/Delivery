@@ -8,6 +8,7 @@ import com.ldif.delivery.payment.presentation.dto.PaymentStatusResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -33,7 +34,7 @@ public class PaymentServiceV1 {
                 .orElseThrow(() -> new IllegalArgumentException("결제를 찾을 수 없습니다."));
 
         if (payment.getDeletedAt() != null) {
-            throw new IllegalArgumentException("삭제된 결제입니다.");
+            throw new IllegalStateException("삭제된 결제입니다.");
         }
 
         return new PaymentResponse(payment);
@@ -46,7 +47,7 @@ public class PaymentServiceV1 {
                 .orElseThrow(() -> new IllegalArgumentException("결제를 찾을 수 없습니다."));
 
         if (payment.getDeletedAt() != null) {
-            throw new IllegalArgumentException("삭제된 결제입니다.");
+            throw new IllegalStateException("삭제된 결제입니다.");
         }
 
         return new PaymentStatusResponse(payment);
@@ -59,15 +60,15 @@ public class PaymentServiceV1 {
                 .orElseThrow(() -> new IllegalArgumentException("결제를 찾을 수 없습니다."));
 
         if (payment.getDeletedAt() != null) {
-            throw new IllegalArgumentException("삭제된 결제입니다.");
+            throw new IllegalStateException("삭제된 결제입니다.");
         }
 
         if ("CANCELLED".equals(payment.getStatus())) {
-            throw new IllegalArgumentException("이미 취소된 결제입니다.");
+            throw new IllegalStateException("이미 취소된 결제입니다.");
         }
 
         if ("COMPLETED".equals(payment.getStatus())) {
-            throw new IllegalArgumentException("완료된 결제는 취소할 수 없습니다.");
+            throw new IllegalStateException("완료된 결제는 취소할 수 없습니다.");
         }
 
         payment.cancel();
