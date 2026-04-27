@@ -37,7 +37,7 @@ public class StoreControllerV1 {
             UserRoleEnum.Authority.MASTER
     })
     public ResponseEntity<CommonResponse<UUID>> createStore(
-            @RequestBody StoreRequest request,
+            @Valid @RequestBody StoreRequest request,
             @AuthenticationPrincipal UserDetailsImpl loginUser
     ) {
         UUID storeId = storeServiceV1.createStore(request, loginUser);
@@ -91,7 +91,7 @@ public class StoreControllerV1 {
     })
     public ResponseEntity<CommonResponse<Void>> updateStore(
             @PathVariable UUID storeId,
-            @RequestBody StoreRequest request,
+            @Valid @RequestBody StoreRequest request,
             @AuthenticationPrincipal UserDetailsImpl loginUser
     ) {
         storeServiceV1.updateStore(storeId, request, loginUser);
