@@ -14,7 +14,6 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -34,9 +33,10 @@ public class PaymentControllerV1 {
             @RequestParam(required = false) String status,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "DESC") String sort
+            @RequestParam(defaultValue = "DESC") String sort,
+            @AuthenticationPrincipal UserDetailsImpl loginUser
     ) {
-        Page<PaymentResponse> payments = paymentServiceV1.getPayments(status, page, size, sort);
+        Page<PaymentResponse> payments = paymentServiceV1.getPayments(status, page, size, sort, loginUser);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(CommonResponse.success(HttpStatus.OK.value(), "SUCCESS", payments));

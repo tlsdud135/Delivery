@@ -5,11 +5,14 @@ import com.ldif.delivery.payment.domain.entity.PaymentEntity;
 import com.ldif.delivery.payment.domain.repository.PaymentRepository;
 import com.ldif.delivery.payment.presentation.dto.PaymentResponse;
 import com.ldif.delivery.payment.presentation.dto.PaymentStatusResponse;
+import com.ldif.delivery.user.domain.entity.UserEntity;
+import com.ldif.delivery.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,10 +26,14 @@ import java.util.UUID;
 public class PaymentServiceV1 {
 
     private final PaymentRepository paymentRepository;
+    private final UserRepository userRepository;
 
     // 결제 목록 조회
     @Transactional(readOnly = true)
-    public Page<PaymentResponse> getPayments(String status, int page, int size, String sort) {
+    public Page<PaymentResponse> getPayments(String status, int page, int size, String sort, UserDetailsImpl loginUser) {
+
+        validateUserRole(loginUser);
+
         Sort.Direction direction = sort.equalsIgnoreCase("ASC")
                 ? Sort.Direction.ASC
                 : Sort.Direction.DESC;
@@ -50,6 +57,9 @@ public class PaymentServiceV1 {
     // 결제 상세 조회
     @Transactional(readOnly = true)
     public PaymentResponse getPayment(UUID paymentId, UserDetailsImpl loginUser) {
+
+        validateUserRole(loginUser);
+
         PaymentEntity payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new IllegalArgumentException("결제를 찾을 수 없습니다."));
 
@@ -63,6 +73,9 @@ public class PaymentServiceV1 {
     // 결제 상태 조회
     @Transactional(readOnly = true)
     public PaymentStatusResponse getPaymentStatus(UUID paymentId, UserDetailsImpl loginUser) {
+
+        validateUserRole(loginUser);
+
         PaymentEntity payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new IllegalArgumentException("결제를 찾을 수 없습니다."));
 
@@ -76,6 +89,9 @@ public class PaymentServiceV1 {
     // 결제 취소
     @Transactional
     public void cancelPayment(UUID paymentId, UserDetailsImpl loginUser) {
+
+        validateUserRole(loginUser);
+
         PaymentEntity payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new IllegalArgumentException("결제를 찾을 수 없습니다."));
 
@@ -93,5 +109,22 @@ public class PaymentServiceV1 {
         }
 
         payment.cancel();
+    }
+
+    private void validateUserRole(UserDetailsImpl loginUser) {
+
+        if (loginUser == null) {
+            throw new AccessDeniedException("로그인이 필요합니다.");
+        }
+
+        UserEntity user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new AccessDeniedException("유저를 찾을 수 없습니다."));
+
+        String dbRole = user.getRole().getAuthority();
+        String tokenRole = loginUser.getAuthorities().iterator().next().getAuthority();
+
+        if (!dbRole.equals(tokenRole)) {
+            throw new AccessDeniedException("권한 정보가 일치하지 않습니다.");
+        }
     }
 }
