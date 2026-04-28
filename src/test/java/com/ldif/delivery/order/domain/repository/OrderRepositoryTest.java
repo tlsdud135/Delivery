@@ -32,6 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @Import(QueryDslConfig.class)
+@org.springframework.test.context.TestPropertySource(properties = {"spring.sql.init.mode=never"})
 public class OrderRepositoryTest {
 
     @Autowired
@@ -91,7 +92,10 @@ public class OrderRepositoryTest {
 
         // Address
         address = em.persist(Address.builder()
-                .user(customer1).address("서울시 종로구 지하문로3가길 33")).build();
+                .user(customer1)
+                .address("서울시 종로구 지하문로3가길 33")
+                .detailAddress("101호")
+                .build());
 
         em.flush();
         em.clear();
