@@ -79,38 +79,27 @@ tasks.withType(JavaCompile).configureEach {
 }
 clean { delete file(querydslDir) }
 
-tasks.named('test') {
-    useJUnitPlatform()
-
+// .env 파싱 공통 함수
+def loadEnvFile() {
     def envMap = [:]
 
-    // 1. .env 파일 로드 (가장 낮은 우선순위)
     if (file(".env").exists()) {
         file(".env").readLines().each { line ->
-            def trimmed = line.trim()
+            def trimmed = line?.trim()
             if (trimmed && !trimmed.startsWith("#") && trimmed.contains("=")) {
+
                 def parts = trimmed.split("=", 2)
-                def key = parts[0].trim()
-                def value = parts.length > 1 ? parts[1].trim().replaceAll(/^["']|["']$/, "") : ""
-                envMap[key] = value
+                def key = parts[0]?.trim()
+                def value = parts.length > 1 ? parts[1].trim() : ""
+
+                if (key) {
+                    envMap[key] = value.replaceAll(/^["']|["']$/, "")
+                }
             }
         }
     }
 
-    // 2. 필요한 특정 시스템 환경 변수들을 추가/덮어쓰기 (가장 높은 우선순위)
-    // .env에 없더라도 시스템에 정의되어 있다면 가져옵니다.
-    def criticalKeys = ["POSTGRES_USER", "POSTGRES_PASSWORD", "JWT_SECRET_KEY", "GEMINI_API_KEY"]
-    criticalKeys.each { key ->
-        def sysVal = System.getenv(key)
-        if (sysVal != null) {
-            envMap[key] = sysVal
-        }
-    }
-
-    // 3. 일괄 적용
-    envMap.each { k, v ->
-        environment k, v
-    }
+    return envMap
 }
 
 tasks.register('dev', JavaExec) {
@@ -120,12 +109,27 @@ tasks.register('dev', JavaExec) {
     mainClass = 'com.ldif.delivery.DeliveryApplication'
     classpath = sourceSets.main.runtimeClasspath
 
-    if (file(".env").exists()) {
-        file(".env").readLines().each { line ->
-            if (!line.isEmpty() && !line.startsWith("#") && line.contains("=")) {
-                def parts = line.split('=', 2)
-                environment parts[0].trim(), parts[1].trim()
-            }
+    def envMap = loadEnvFile()
+    envMap.each { k, v ->
+        environment k, v
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+
+    def envMap = loadEnvFile()
+
+    def criticalKeys = ["POSTGRES_USER", "POSTGRES_PASSWORD", "JWT_SECRET_KEY", "GEMINI_API_KEY"]
+
+    criticalKeys.each { key ->
+        def sysVal = System.getenv(key)
+        if (sysVal != null) {
+            envMap[key] = sysVal
         }
+    }
+
+    envMap.each { k, v ->
+        environment k, v
     }
 }
