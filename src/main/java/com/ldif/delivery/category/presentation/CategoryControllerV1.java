@@ -8,6 +8,7 @@ import com.ldif.delivery.global.infrastructure.presentation.dto.CommonResponse;
 import com.ldif.delivery.user.domain.entity.UserRoleEnum;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -15,7 +16,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -43,19 +43,25 @@ public class CategoryControllerV1 {
     }
 
     @GetMapping
-    public ResponseEntity<CommonResponse<List<CategoryResponse>>> getCategories(){
-        List<CategoryResponse> categories = categoryServiceV1.getCategories();
+    public ResponseEntity<CommonResponse<Page<CategoryResponse>>> searchCategories(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<CategoryResponse> categories =
+                categoryServiceV1.searchCategories(keyword, page, size);
 
-        return ResponseEntity.ok(CommonResponse.success(
-                HttpStatus.OK.value(),
-                "SUCCESS",
-                categories
-        ));
+        return ResponseEntity.ok(
+                CommonResponse.success(
+                        HttpStatus.OK.value(),
+                        "SUCCESS",
+                        categories
+                )
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommonResponse<CategoryResponse>> getCategory(@PathVariable UUID id)
-    {
+    public ResponseEntity<CommonResponse<CategoryResponse>> getCategory(@PathVariable UUID id) {
         CategoryResponse category = categoryServiceV1.getCategory(id);
 
         return ResponseEntity.ok(
