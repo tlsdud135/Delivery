@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.EnumSet;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -87,7 +88,12 @@ public class CategoryServiceV1 {
 
     @Transactional(readOnly = true)
     public Page<CategoryResponse> searchCategories(String keyword, int page, int size) {
-        validatePageSize(size);
+
+        List<Integer> allowedSizes = List.of(10, 30, 50);
+
+        if (!allowedSizes.contains(size)) {
+            size = 10;
+        }
 
         Pageable pageable = PageRequest.of(
                 page,
@@ -116,12 +122,6 @@ public class CategoryServiceV1 {
 
         if (!requiredAuthorities.contains(user.getRole())) {
             throw new AccessDeniedException("권한 없음");
-        }
-    }
-
-    private void validatePageSize(int size) {
-        if (size != 10 && size != 30 && size != 50) {
-            throw new IllegalArgumentException("페이지 사이즈는 10, 30, 50만 가능합니다.");
         }
     }
 }
