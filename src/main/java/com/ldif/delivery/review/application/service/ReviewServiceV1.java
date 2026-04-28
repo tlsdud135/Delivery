@@ -63,7 +63,8 @@ public class ReviewServiceV1 {
 
         UserEntity user = order.getCustomer();
 
-        StoreEntity store = order.getStore();
+        StoreEntity store = storeRepository.findByIdWithLock(order.getStore().getStoreId())
+                .orElseThrow(() -> new ReviewException(ErrorCode.REVIEW_NOT_FOUND));
 
         validateReviewAuthor(user.getUsername(), loginUser);
 

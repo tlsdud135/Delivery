@@ -16,6 +16,6 @@ public interface StoreRepository extends JpaRepository<StoreEntity, UUID> {
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @QueryHints({@QueryHint(name = "jakarta.persistence.lock.timeout", value = "3000")})
-    @Query("select s from StoreEntity s where s.storeId = :id")
-    Optional<StoreEntity> findByIdWithLock(@Param("id") UUID id);
+    @Query("SELECT s FROM StoreEntity s WHERE s.storeId = :storeId AND s.deletedAt IS NULL")
+    Optional<StoreEntity> findByIdWithLock(@Param("storeId") UUID storeId);
 }

@@ -112,6 +112,7 @@ public class ReviewTest {
             ReqReviewDto dto = new ReqReviewDto(5, "맛있어요!");
 
             given(orderRepository.findActiveById(orderId)).willReturn(Optional.of(mockOrder));
+            given(storeRepository.findByIdWithLock(any())).willReturn(Optional.of(mockStore));
             given(reviewRepository.findByOrder_OrderId(orderId)).willReturn(Optional.empty());
 
             // Mock 객체를 save 반환값으로 사용해야 DTO 변환 시 NPE 안 남
@@ -150,6 +151,7 @@ public class ReviewTest {
             // Given
             ReqReviewDto dto = new ReqReviewDto(5, "맛있어요!");
             given(orderRepository.findActiveById(orderId)).willReturn(Optional.of(mockOrder));
+            given(storeRepository.findByIdWithLock(any())).willReturn(Optional.of(mockStore));
 
             // 권한 없음 설정
             given(loginUser.hasPermission(username)).willReturn(false);
@@ -167,6 +169,7 @@ public class ReviewTest {
             // Given
             ReqReviewDto dto = new ReqReviewDto(5, "맛있어요!");
             given(orderRepository.findActiveById(orderId)).willReturn(Optional.of(mockOrder));
+            given(storeRepository.findByIdWithLock(any())).willReturn(Optional.of(mockStore));
 
             given(reviewRepository.findByOrder_OrderId(orderId)).willReturn(Optional.of(mockReview));
 
@@ -183,6 +186,7 @@ public class ReviewTest {
             // Given
             ReqReviewDto dto = new ReqReviewDto(5, "맛있어요!");
             given(orderRepository.findActiveById(orderId)).willReturn(Optional.of(mockOrder));
+            given(storeRepository.findByIdWithLock(any())).willReturn(Optional.of(mockStore));
             given(reviewRepository.findByOrder_OrderId(orderId)).willReturn(Optional.empty());
 
             given(mockOrder.getStatus()).willReturn(OrderStatus.PENDING);
@@ -203,6 +207,7 @@ public class ReviewTest {
             // 리뷰 저장은 전달받은 객체를 그대로 반환하도록 설정
             given(reviewRepository.save(any(ReviewEntity.class))).willAnswer(returnsFirstArg());
             given(reviewRepository.findByOrder_OrderId(any(UUID.class))).willReturn(Optional.empty());
+            given(storeRepository.findByIdWithLock(any())).willReturn(Optional.of(realStore));
 
             // 1. 첫 번째 리뷰: 5점
             UUID orderId1 = UUID.randomUUID();
