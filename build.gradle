@@ -1,34 +1,135 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.5.13'
-	id 'io.spring.dependency-management' version '1.1.7'
+    id 'java'
+    id 'org.springframework.boot' version '3.5.13'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+ext {
+    springAiVersion = "1.1.4"
 }
 
 group = 'com.ldif'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testCompileOnly 'org.projectlombok:lombok'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	testAnnotationProcessor 'org.projectlombok:lombok'
+    // Spring Boot
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // PostgreSQL
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // JWT
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+
+    // QueryDSL
+
+    implementation 'com.querydsl:querydsl-jpa:5.1.0:jakarta'
+    annotationProcessor 'com.querydsl:querydsl-apt:5.1.0:jakarta'
+    annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+    annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testCompileOnly 'org.projectlombok:lombok'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.jeasy:easy-random-core:5.0.0'
+
+    //api
+    implementation 'org.springframework.ai:spring-ai-starter-model-google-genai'
+
+    //mysql, h2
+    runtimeOnly 'com.h2database:h2'
+    implementation 'com.mysql:mysql-connector-j'
+
+    // swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
+
+
+}
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.ai:spring-ai-bom:$springAiVersion"
+    }
+}
+
+// QueryDSL Q-class 생성 경로
+def querydslDir = "src/main/generated"
+sourceSets.main.java.srcDirs += [querydslDir]
+tasks.withType(JavaCompile).configureEach {
+    options.getGeneratedSourceOutputDirectory().set(file(querydslDir))
+}
+clean { delete file(querydslDir) }
+
+// .env 파싱 공통 함수
+def loadEnvFile() {
+    def envMap = [:]
+
+    if (file(".env").exists()) {
+        file(".env").readLines().each { line ->
+            def trimmed = line?.trim()
+            if (trimmed && !trimmed.startsWith("#") && trimmed.contains("=")) {
+
+                def parts = trimmed.split("=", 2)
+                def key = parts[0]?.trim()
+                def value = parts.length > 1 ? parts[1].trim() : ""
+
+                if (key) {
+                    envMap[key] = value.replaceAll(/^["']|["']$/, "")
+                }
+            }
+        }
+    }
+
+    return envMap
+}
+
+tasks.register('dev', JavaExec) {
+    group = "application"
+    description = "환경변수(.env)를 로드하여 애플리케이션을 실행합니다."
+
+    mainClass = 'com.ldif.delivery.DeliveryApplication'
+    classpath = sourceSets.main.runtimeClasspath
+
+    def envMap = loadEnvFile()
+    envMap.each { k, v ->
+        environment k, v
+    }
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
+
+    def envMap = loadEnvFile()
+
+    def criticalKeys = ["POSTGRES_USER", "POSTGRES_PASSWORD", "JWT_SECRET_KEY", "GEMINI_API_KEY"]
+
+    criticalKeys.each { key ->
+        def sysVal = System.getenv(key)
+        if (sysVal != null) {
+            envMap[key] = sysVal
+        }
+    }
+
+    envMap.each { k, v ->
+        environment k, v
+    }
 }

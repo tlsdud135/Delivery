@@ -1,3 +1,4 @@
+.env
 HELP.md
 .gradle
 build/
@@ -35,3 +36,11 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Querydsl 생성 파일 git 관리 제외 ###
+/src/main/generated/
+
+### 환경 변수 파일 Git 제외 처리 ###
+.env
+.env.*
+!.env.example
