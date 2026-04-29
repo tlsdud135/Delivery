@@ -24,12 +24,15 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
         String jwtSchemeName = "bearerAuth";
 
+        io.swagger.v3.oas.models.security.SecurityRequirement securityRequirement =
+                new io.swagger.v3.oas.models.security.SecurityRequirement().addList(jwtSchemeName);
+
         return new OpenAPI()
                 .info(new Info()
                         .title("Delivery API")
                         .description("Delivery 프로젝트 API 문서")
                         .version("v1.0.0"))
-
+                .addSecurityItem(securityRequirement)
                 // JWT Authorize 버튼 설정
                 .components(new Components()
                         .addSecuritySchemes(jwtSchemeName,
