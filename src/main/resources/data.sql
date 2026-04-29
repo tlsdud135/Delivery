@@ -19,10 +19,10 @@ INSERT INTO p_user (username, nickname, email, password, role, is_public, create
 VALUES ('customer02', '오늘도배달', 'customer02@ldif.com', '$2a$10$zPKFwB3/qF3lqvxaY3mW1eqXk2B8v9waw452y/xh2EXEGr5lokCSG', 'CUSTOMER', true, NOW(), 'system');
 
 -- 5. 카테고리
-INSERT INTO p_category (category_id, name, created_at, created_by)
-VALUES ('550e8400-e29b-41d4-a716-446655440001', '치킨', NOW(), 'system');
-INSERT INTO p_category (category_id, name, created_at, created_by)
-VALUES ('550e8400-e29b-41d4-a716-446655440002', '피자', NOW(), 'system');
+INSERT INTO p_category (category_id, name, is_hidden, created_at, created_by)
+VALUES ('550e8400-e29b-41d4-a716-446655440001', '치킨', false, NOW(), 'system');
+INSERT INTO p_category (category_id, name, is_hidden, created_at, created_by)
+VALUES ('550e8400-e29b-41d4-a716-446655440002', '피자', false, NOW(), 'system');
 
 -- 5.1 지역 (p_area)
 INSERT INTO p_area (area_id, name, city, district, is_active, is_deleted, created_at, created_by)
